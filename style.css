@@ -124,6 +124,21 @@ body{
   padding-bottom:50px;
 }
 
+.status-message,
+.error-message{
+  text-align:center;
+  padding:60px 20px;
+  border:1px solid rgba(212,175,55,.12);
+  border-radius:20px;
+  background:rgba(255,255,255,.03);
+  color:#aaa;
+}
+
+.error-message{
+  color:#ff7777;
+  border-color:rgba(255,92,92,.2);
+}
+
 .menu-card{
   margin-bottom:28px;
 
