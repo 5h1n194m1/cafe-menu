@@ -1,490 +1,479 @@
 const SPREADSHEET_ID =
-  "1rjAvzY28sZ6QABnztEiUK56NSIzlvYrlYl7E8eGdI7A";
+  "1rjAvzY28sZ6QABnztEiUK56NSIzlvYrlYl7E8eGdI7A"
 
-const OPEN_SHEET_HOSTS = [
-  "https://opensheet.elk.sh",
-  "https://opensheet.vercel.app"
-];
+const MENU_API =
+  `https://opensheet.elk.sh/${SPREADSHEET_ID}/Menu`
 
-const FETCH_TIMEOUT_MS = 10000;
-const AUTO_REFRESH_MS = 30000;
+const BEANS_API =
+  `https://opensheet.elk.sh/${SPREADSHEET_ID}/Beans`
 
 
-
-/* =========================
-   HELPERS
-========================= */
-
-function escapeHTML(value){
-
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-}
-
-function cleanValue(value){
-
-  return String(value ?? "").trim();
-
-}
-
-function isMenuAvailable(value){
-
-  if(typeof value === "boolean"){
-    return value;
-  }
-
-  return cleanValue(value).toUpperCase() !== "FALSE";
-
-}
-
-function formatPrice(value){
-
-  const number =
-    Number(cleanValue(value).replace(/[^\d]/g, ""));
-
-  if(!number){
-    return "Rp -";
-  }
-
-  return `Rp ${number.toLocaleString("id-ID")}`;
-
-}
-
-function renderMessage(container, message, className = "status-message"){
-
-  if(!container) return;
-
-  container.innerHTML = `
-
-    <div class="${className}">
-      ${escapeHTML(message)}
-    </div>
-
-  `;
-
-}
-
-
-
-/* =========================
-   SHEET LOADER
-========================= */
 
 async function fetchJSON(url){
 
-  const controller = new AbortController();
+  const response = await fetch(
+    `${url}?v=${Date.now()}`
+  )
 
-  const timeoutId = setTimeout(() => {
-    controller.abort();
-  }, FETCH_TIMEOUT_MS);
-
-  try{
-
-    const response = await fetch(url, {
-      cache:"no-store",
-      signal:controller.signal
-    });
-
-    if(!response.ok){
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    return await response.json();
-
+  if(!response.ok){
+    throw new Error("Failed fetch")
   }
 
-  finally{
-    clearTimeout(timeoutId);
-  }
-
-}
-
-async function loadSheetRows(sheetName){
-
-  const encodedSheet = encodeURIComponent(sheetName);
-  const cacheBust = Date.now();
-  const errors = [];
-
-  for(const host of OPEN_SHEET_HOSTS){
-
-    try{
-
-      const data = await fetchJSON(
-        `${host}/${SPREADSHEET_ID}/${encodedSheet}?v=${cacheBust}`
-      );
-
-      if(Array.isArray(data)){
-        return data;
-      }
-
-      errors.push(`${host} returned invalid data`);
-
-    }
-
-    catch(error){
-      errors.push(`${host}: ${error.message}`);
-    }
-
-  }
-
-  try{
-    return await loadSheetRowsWithGoogle(sheetName);
-  }
-
-  catch(error){
-    errors.push(`Google Sheets fallback: ${error.message}`);
-    throw new Error(errors.join(" | "));
-  }
-
-}
-
-function loadSheetRowsWithGoogle(sheetName){
-
-  return new Promise((resolve, reject) => {
-
-    const safeSheetName = sheetName.replace(/[^\w]/g, "");
-    const callbackName =
-      `sheetCallback_${safeSheetName}_${Date.now()}_${Math.random()
-        .toString(36)
-        .slice(2)}`;
-
-    const script = document.createElement("script");
-
-    const timeoutId = setTimeout(() => {
-      cleanup();
-      reject(new Error("request timeout"));
-    }, FETCH_TIMEOUT_MS);
-
-    function cleanup(){
-
-      clearTimeout(timeoutId);
-      delete window[callbackName];
-
-      if(script.parentNode){
-        script.parentNode.removeChild(script);
-      }
-
-    }
-
-    window[callbackName] = response => {
-
-      try{
-        const rows = parseGoogleSheetResponse(response);
-        cleanup();
-        resolve(rows);
-      }
-
-      catch(error){
-        cleanup();
-        reject(error);
-      }
-
-    };
-
-    script.onerror = () => {
-      cleanup();
-      reject(new Error("script failed to load"));
-    };
-
-    const url = new URL(
-      `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq`
-    );
-
-    url.searchParams.set(
-      "tqx",
-      `responseHandler:${callbackName};out:json`
-    );
-    url.searchParams.set("sheet", sheetName);
-    url.searchParams.set("v", Date.now());
-
-    script.src = url.toString();
-    document.body.appendChild(script);
-
-  });
-
-}
-
-function parseGoogleSheetResponse(response){
-
-  if(!response || response.status !== "ok" || !response.table){
-    throw new Error("invalid Google Sheets response");
-  }
-
-  const columns = response.table.cols.map((column, index) => {
-    return cleanValue(column.label || column.id || `column_${index}`);
-  });
-
-  return response.table.rows
-    .map(row => {
-
-      const item = {};
-
-      row.c.forEach((cell, index) => {
-
-        const key = columns[index];
-
-        if(!key) return;
-
-        item[key] =
-          cell && cell.f != null
-          ? cell.f
-          : cell && cell.v != null
-          ? cell.v
-          : "";
-
-      });
-
-      return item;
-
-    })
-    .filter(item => {
-      return Object.values(item).some(value => cleanValue(value));
-    });
+  return response.json()
 
 }
 
 
 
 /* =========================
-   LOAD MENU
+   MENU RENDER
 ========================= */
 
-async function loadMenu(){
-
-  const container =
-    document.getElementById("menu-container");
-
-  if(!container) return;
+async function renderMenu(){
 
   try{
 
-    if(!container.children.length){
-      renderMessage(container, "Memuat menu...");
-    }
+    const data = await fetchJSON(MENU_API)
 
-    const data = await loadSheetRows("Menu");
-    const grouped = new Map();
+    const container =
+      document.getElementById("menu-container")
 
-    data
-      .filter(item => cleanValue(item.name))
-      .forEach(item => {
+    const grouped = {}
 
-        const category =
-          cleanValue(item.category) || "Menu";
+    data.forEach(item => {
 
-        if(!grouped.has(category)){
-          grouped.set(category, []);
-        }
+      if(!grouped[item.category]){
+        grouped[item.category] = []
+      }
 
-        grouped.get(category).push(item);
+      grouped[item.category].push(item)
 
-      });
+    })
 
-    if(!grouped.size){
-      renderMessage(container, "Menu belum tersedia.");
-      return;
-    }
+    const foodItems =
+      grouped["Food"] || []
 
-    container.innerHTML =
-      Array.from(grouped.entries())
-        .map(([category, items]) => renderMenuCategory(category, items))
-        .join("");
+    const snackItems =
+      grouped["Snack"] || []
+
+    const coffeeItems =
+      grouped["Coffee"] || []
+
+    const drinkItems =
+      grouped["Drink"] || []
+
+
+
+    container.innerHTML = `
+
+      ${renderFoodPage(foodItems,snackItems)}
+
+      ${renderDrinkPage(coffeeItems,drinkItems)}
+
+    `
 
   }
 
   catch(error){
 
-    console.error("Failed to load menu:", error);
+    console.error(error)
 
-    renderMessage(
-      container,
-      "Menu belum bisa dimuat. Silakan refresh beberapa saat lagi.",
-      "error-message"
-    );
+    document.getElementById(
+      "menu-container"
+    ).innerHTML = `
+
+      <div class="error-message">
+        Failed to load menu.
+      </div>
+
+    `
 
   }
 
 }
 
-function renderMenuCategory(category, items){
+
+
+/* =========================
+   FOOD PAGE
+========================= */
+
+function renderFoodPage(food,snack){
+
+  const paket =
+    food.slice(0,10)
+
+  const mie =
+    food.slice(10)
 
   return `
 
-    <section class="menu-card fade">
+    <section class="menu-sheet">
 
-      <div class="category-title">
+      <div class="sheet-corner left"></div>
+      <div class="sheet-corner right"></div>
 
-        <div class="category-inner">
+      <div class="sheet-header">
 
-          <div class="category-line"></div>
+        <div class="brand-name">
+          Garasi Kumbawali Coffee & Eatery
+        </div>
 
-          <h2 class="category-name">
-            ${escapeHTML(category)}
-          </h2>
+        <div class="sheet-title">
+          Food Menu
+        </div>
+
+        <div class="sheet-note">
+          (NON MSG)
+        </div>
+
+        <div class="tagline">
+          Kopi adalah Sahabat
+        </div>
+
+        <div class="ornament">
+          <span></span>
+        </div>
+
+      </div>
+
+      <div class="page-grid food-grid">
+
+        <div>
+
+          <div class="section-block">
+
+            <div class="section-title">
+              Paket Nasi Kumbawali
+              <span class="section-star">★</span>
+            </div>
+
+            <div class="menu-list">
+
+              ${renderItems(paket)}
+
+            </div>
+
+          </div>
+
+          <div
+            class="section-block"
+            style="margin-top:22px"
+          >
+
+            <div class="section-title">
+              Indomie Kumbawali
+              <span class="section-star">★</span>
+            </div>
+
+            <div class="menu-list">
+
+              ${renderItems(
+                mie.slice(0,2)
+              )}
+
+            </div>
+
+          </div>
+
+          <div
+            class="section-block"
+            style="margin-top:22px"
+          >
+
+            <div class="section-title">
+              Sayur/Mie Kumbawali
+              <span class="section-star">★</span>
+            </div>
+
+            <div class="menu-list">
+
+              ${renderItems(
+                mie.slice(2)
+              )}
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div>
+
+          <div class="section-block">
+
+            <div class="section-title">
+              Snack Kumbawali
+              <span class="section-star">★</span>
+            </div>
+
+            <div class="menu-list">
+
+              ${renderItems(snack)}
+
+            </div>
+
+          </div>
 
         </div>
 
       </div>
 
-      ${items.map(renderMenuItem).join("")}
+      <div class="takeaway-note">
+        (Take Away +1.5K)
+      </div>
+
+      <div class="sheet-footer">
+        Reservasi : 081 225 222 112<br>
+        Paingan Trasan Bandongan Magelang<br>
+        Instagram : @garasikumbawali_coffee_eatery
+      </div>
 
     </section>
 
-  `;
-
-}
-
-function renderMenuItem(item){
-
-  const temp = cleanValue(item.temp);
-  const available = isMenuAvailable(item.available);
-
-  return `
-
-    <div class="menu-item fade">
-
-      <div class="menu-row">
-
-        <div class="menu-left">
-
-          <div class="menu-name">
-            ${escapeHTML(item.name || "-")}
-          </div>
-
-          <div class="menu-meta">
-
-            ${
-              temp && temp !== "-"
-              ? `
-                <span class="temp-badge">
-                  ${escapeHTML(temp)}
-                </span>
-              `
-              : ``
-            }
-
-            ${
-              available
-              ? `
-                <span class="available">
-                  Available
-                </span>
-              `
-              : `
-                <span class="sold">
-                  SOLD OUT
-                </span>
-              `
-            }
-
-          </div>
-
-        </div>
-
-        <div class="price-area">
-
-          <div class="price">
-            ${formatPrice(item.price)}
-          </div>
-
-          <div class="takeaway-note">
-            +1.5K take away
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
+  `
 
 }
 
 
 
 /* =========================
-   LOAD BEANS
+   DRINK PAGE
 ========================= */
 
-async function loadBeans(){
+function renderDrinkPage(coffee,drink){
 
-  const container =
-    document.getElementById("beans-container");
+  return `
 
-  if(!container) return;
+    <section class="menu-sheet">
+
+      <div class="sheet-corner left"></div>
+      <div class="sheet-corner right"></div>
+
+      <div class="sheet-header">
+
+        <div class="brand-name">
+          Garasi Kumbawali Coffee & Eatery
+        </div>
+
+        <div class="sheet-title">
+          Drink Menu
+        </div>
+
+        <div class="tagline">
+          Kopi adalah Sahabat
+        </div>
+
+        <div class="ornament">
+          <span></span>
+        </div>
+
+      </div>
+
+      <div class="page-grid drink-grid">
+
+        <div>
+
+          <div class="section-block">
+
+            <div class="section-title">
+              Coffee Kumbawali
+              <span class="section-star">★</span>
+            </div>
+
+            <div class="menu-list">
+
+              ${renderItems(coffee)}
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div>
+
+          <div class="section-block">
+
+            <div class="section-title">
+              Teh & Jahe
+              <span class="section-star">★</span>
+            </div>
+
+            <div class="menu-list">
+
+              ${renderItems(
+                drink.slice(0,10)
+              )}
+
+            </div>
+
+          </div>
+
+          <div
+            class="section-block"
+            style="margin-top:22px"
+          >
+
+            <div class="section-title">
+              Kekinian dll
+              <span class="section-star">★</span>
+            </div>
+
+            <div class="menu-list">
+
+              ${renderItems(
+                drink.slice(10)
+              )}
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div
+        class="section-block wide"
+        style="margin-top:28px"
+      >
+
+        <div class="section-title">
+          Bean (Single Origin & Authentic 100%)
+          <span class="section-star">★★★</span>
+        </div>
+
+        <div
+          id="beans-copy"
+          class="beans-copy"
+        >
+          Memuat beans...
+        </div>
+
+      </div>
+
+      <div class="takeaway-note">
+        (Take Away +1.5K)
+      </div>
+
+      <div class="sheet-footer">
+        Reservasi : 081 225 222 112<br>
+        Paingan Trasan Bandongan Magelang<br>
+        Instagram : @garasikumbawali_coffee_eatery
+      </div>
+
+    </section>
+
+  `
+
+}
+
+
+
+/* =========================
+   MENU ITEMS
+========================= */
+
+function renderItems(items){
+
+  return items.map(item => {
+
+    const temp =
+      item.temp &&
+      item.temp !== "-"
+      ? `<span class="item-sub">${item.temp}</span>`
+      : ""
+
+    return `
+
+      <div class="menu-row">
+
+        <div class="item-name">
+          ${item.name}
+          ${temp}
+        </div>
+
+        <div class="item-leader"></div>
+
+        <div class="item-price">
+          ${formatPrice(item.price)}
+        </div>
+
+      </div>
+
+    `
+
+  }).join("")
+
+}
+
+
+
+/* =========================
+   PRICE FORMAT
+========================= */
+
+function formatPrice(price){
+
+  const value =
+    Number(price || 0)
+
+  if(value >= 1000){
+
+    return `${Math.floor(value / 1000)}K`
+
+  }
+
+  return value
+
+}
+
+
+
+/* =========================
+   BEANS
+========================= */
+
+async function renderBeans(){
 
   try{
 
-    if(!container.children.length){
-      renderMessage(container, "Memuat coffee beans...");
-    }
+    const data =
+      await fetchJSON(BEANS_API)
 
-    const data = await loadSheetRows("Beans");
-    const beans = data.filter(bean => cleanValue(bean.name));
+    const container =
+      document.getElementById("beans-copy")
 
-    if(!beans.length){
-      renderMessage(container, "Coffee beans belum tersedia.");
-      return;
-    }
+    if(!container) return
 
-    container.innerHTML =
-      beans.map(renderBeanCard).join("");
+    container.innerHTML = `
+
+      ${data.map((bean,index)=>`
+
+        <div>
+
+          <strong>
+            ${index + 1}.
+            ${bean.name}
+          </strong>
+
+          (${bean.origin}) —
+          ${bean.process}
+
+        </div>
+
+      `).join("")}
+
+    `
 
   }
 
   catch(error){
 
-    console.error("Failed to load beans:", error);
-
-    renderMessage(
-      container,
-      "Coffee beans belum bisa dimuat. Silakan refresh beberapa saat lagi.",
-      "error-message"
-    );
+    console.error(error)
 
   }
-
-}
-
-function renderBeanCard(bean){
-
-  return `
-
-    <div class="bean-card fade">
-
-      <div class="bean-top">
-
-        <div class="bean-category">
-          ${escapeHTML(bean.category || "-")}
-        </div>
-
-        <div class="bean-origin">
-          ${escapeHTML(bean.origin || "-")}
-        </div>
-
-      </div>
-
-      <h3 class="bean-name">
-        ${escapeHTML(bean.name || "-")}
-      </h3>
-
-      <div class="bean-process">
-        ${escapeHTML(bean.process || "-")}
-      </div>
-
-      <p class="bean-notes">
-        ${escapeHTML(bean.notes || "-")}
-      </p>
-
-    </div>
-
-  `;
 
 }
 
@@ -494,21 +483,10 @@ function renderBeanCard(bean){
    INIT
 ========================= */
 
-function init(){
+renderMenu()
 
-  loadMenu();
-  loadBeans();
+setTimeout(() => {
 
-  setInterval(() => {
-    loadMenu();
-    loadBeans();
-  }, AUTO_REFRESH_MS);
+  renderBeans()
 
-}
-
-if(document.readyState === "loading"){
-  document.addEventListener("DOMContentLoaded", init);
-}
-else{
-  init();
-}
+}, 300)
