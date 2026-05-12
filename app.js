@@ -250,64 +250,100 @@ function renderBeansSection(){
 
         <div class="bean-card">
 
+          <div class="bean-top">
+
+            <div class="bean-origin">
+              Bandung
+            </div>
+
+            <div class="bean-badge">
+              Fruity
+            </div>
+
+          </div>
+
           <div class="bean-name">
             Halu Banana
           </div>
 
-          <div class="bean-origin">
-            Bandung
-          </div>
-
           <div class="bean-note">
-            Fruity • Sweet • Smooth
+            Sweet banana aroma with smooth
+            body and soft acidity.
           </div>
 
         </div>
 
         <div class="bean-card">
+
+          <div class="bean-top">
+
+            <div class="bean-origin">
+              Aceh
+            </div>
+
+            <div class="bean-badge">
+              Winey
+            </div>
+
+          </div>
 
           <div class="bean-name">
             Blueberry Wine
           </div>
 
-          <div class="bean-origin">
-            Aceh
-          </div>
-
           <div class="bean-note">
-            Berry • Winey • Floral
+            Berry-forward profile with
+            winey finish and floral aroma.
           </div>
 
         </div>
 
         <div class="bean-card">
+
+          <div class="bean-top">
+
+            <div class="bean-origin">
+              Temanggung
+            </div>
+
+            <div class="bean-badge">
+              Bold
+            </div>
+
+          </div>
 
           <div class="bean-name">
-            Temanggung Robusta
-          </div>
-
-          <div class="bean-origin">
-            Temanggung
+            Robusta Temanggung
           </div>
 
           <div class="bean-note">
-            Bold • Chocolate • Strong Body
+            Thick body, dark chocolate
+            notes, and intense character.
           </div>
 
         </div>
 
         <div class="bean-card">
+
+          <div class="bean-top">
+
+            <div class="bean-origin">
+              Ethiopia
+            </div>
+
+            <div class="bean-badge">
+              Floral
+            </div>
+
+          </div>
 
           <div class="bean-name">
             Ethiopia Natural
           </div>
 
-          <div class="bean-origin">
-            Ethiopia
-          </div>
-
           <div class="bean-note">
-            Floral • Tea Like • Citrus
+            Tea-like mouthfeel with floral
+            fragrance and citrus finish.
           </div>
 
         </div>
