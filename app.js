@@ -124,15 +124,17 @@ function renderCategory(title,items){
 
     <section class="category">
 
-      <div class="category-title">
+<div class="category-title">
 
-        <div class="category-name">
-          ${title}
-        </div>
+  <div class="category-line"></div>
 
-        <div class="category-line"></div>
+  <div class="category-name">
+    ${title}
+  </div>
 
-      </div>
+  <div class="category-line"></div>
+
+</div>
 
       <div class="menu-list">
 
