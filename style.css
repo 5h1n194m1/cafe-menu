@@ -242,9 +242,11 @@ body::before{
 
   align-items:center;
 
+  justify-content:center;
+
   gap:18px;
 
-  margin-bottom:22px;
+  margin-bottom:26px;
 
 }
 
@@ -258,20 +260,31 @@ body::before{
 
   white-space:nowrap;
 
+  letter-spacing:2px;
+
+  text-transform:uppercase;
+
+  text-align:center;
+
 }
 
 .category-line{
 
-  flex:1;
+  width:100%;
+
+  max-width:140px;
 
   height:1px;
 
   background:
   linear-gradient(
     90deg,
+    transparent,
     var(--gold),
     transparent
   );
+
+  opacity:.8;
 
 }
 
@@ -486,12 +499,13 @@ body::before{
 
   }
 
-  .category-name{
+.category-name{
 
-    font-size:28px;
+  font-size:26px;
 
-  }
+  letter-spacing:1px;
 
+}
   .menu-list{
 
     gap:14px;
