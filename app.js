@@ -27,7 +27,7 @@ async function loadCSV(){
       "menu-container"
     ).innerHTML = `
 
-      <div class="error-message">
+      <div class="loading">
         Failed to load menu.
       </div>
 
@@ -92,37 +92,53 @@ function renderMenu(data){
 
   container.innerHTML = `
 
-    <section class="menu-sheet">
+    ${renderCategory(
+      "Food",
+      grouped["Food"] || []
+    )}
 
-      <div class="sheet-header">
+    ${renderCategory(
+      "Snack",
+      grouped["Snack"] || []
+    )}
 
-        <div class="brand-name">
-          Garasi Kumbawali
+    ${renderCategory(
+      "Coffee",
+      grouped["Coffee"] || []
+    )}
+
+    ${renderCategory(
+      "Drink",
+      grouped["Drink"] || []
+    )}
+
+  `
+
+}
+
+
+
+function renderCategory(title,items){
+
+  return `
+
+    <section class="category">
+
+      <div class="category-title">
+
+        <div class="category-name">
+          ${title}
         </div>
 
-        <div class="sheet-title">
-          Food & Drink
-        </div>
-
-        <div class="tagline">
-          Kopi adalah Sahabat
-        </div>
+        <div class="category-line"></div>
 
       </div>
 
-      ${renderSection("Food", grouped["Food"] || [])}
+      <div class="menu-list">
 
-      <div class="section-space"></div>
+        ${items.map(item => renderItem(item)).join("")}
 
-      ${renderSection("Snack", grouped["Snack"] || [])}
-
-      <div class="section-space"></div>
-
-      ${renderSection("Coffee", grouped["Coffee"] || [])}
-
-      <div class="section-space"></div>
-
-      ${renderSection("Drink", grouped["Drink"] || [])}
+      </div>
 
     </section>
 
@@ -132,50 +148,52 @@ function renderMenu(data){
 
 
 
-function renderSection(title,items){
-
-  return `
-
-    <div>
-
-      <div class="section-title">
-        ${title}
-      </div>
-
-      <div class="menu-list">
-
-        ${items.map(item => renderItem(item)).join("")}
-
-      </div>
-
-    </div>
-
-  `
-
-}
-
-
-
 function renderItem(item){
+
+  const available =
+    item.available === "FALSE"
+    ? `
+      <span class="sold">
+        Sold Out
+      </span>
+    `
+    : `
+      <span class="available">
+        Available
+      </span>
+    `
 
   const temp =
     item.temp &&
     item.temp !== "-"
-    ? `<span class="item-sub">${item.temp}</span>`
+    ? `
+      <span class="temp">
+        ${item.temp}
+      </span>
+    `
     : ""
 
   return `
 
-    <div class="menu-row">
+    <div class="menu-item">
 
-      <div class="item-name">
-        ${item.name}
-        ${temp}
+      <div class="menu-left">
+
+        <div class="menu-name">
+          ${item.name}
+        </div>
+
+        <div class="menu-meta">
+
+          ${available}
+
+          ${temp}
+
+        </div>
+
       </div>
 
-      <div class="item-leader"></div>
-
-      <div class="item-price">
+      <div class="menu-price">
         ${formatPrice(item.price)}
       </div>
 
