@@ -49,3 +49,356 @@
   letter-spacing: 1px;
 
 }
+
+/* =========================
+   BEANS CARD
+========================= */
+
+.bean-head{
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 28px;
+
+}
+
+
+
+.bean-category{
+
+  font-size: 12px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 2px;
+
+  color: rgba(255,255,255,.75);
+
+}
+
+
+
+.bean-origin{
+
+  font-size: 12px;
+
+  color: rgba(255,255,255,.9);
+
+  text-align: right;
+
+}
+
+
+
+.bean-card{
+
+  cursor: pointer;
+
+  transition:
+    transform .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease;
+
+}
+
+
+
+.bean-card:hover{
+
+  transform: translateY(-4px);
+
+  border-color:
+    rgba(212,175,55,.35);
+
+  box-shadow:
+    0 0 30px rgba(212,175,55,.08);
+
+}
+
+
+
+/* =========================
+   PRICE
+========================= */
+
+.bean-price{
+
+  margin-top: 28px;
+
+  padding-top: 18px;
+
+  border-top:
+    1px solid rgba(212,175,55,.12);
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 12px;
+
+}
+
+
+
+.bean-price span{
+
+  font-size: 11px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,.55);
+
+}
+
+
+
+.bean-price strong{
+
+  color: var(--gold);
+
+  font-size: 24px;
+
+}
+
+
+
+/* =========================
+   MODAL
+========================= */
+
+.bean-modal{
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 24px;
+
+}
+
+
+
+.bean-modal-overlay{
+
+  position: absolute;
+
+  inset: 0;
+
+  background: rgba(0,0,0,.75);
+
+  backdrop-filter: blur(8px);
+
+}
+
+
+
+.bean-modal-content{
+
+  position: relative;
+
+  width: 100%;
+
+  max-width: 560px;
+
+  background: #111;
+
+  border:
+    1px solid rgba(212,175,55,.15);
+
+  border-radius: 28px;
+
+  padding: 36px;
+
+  z-index: 2;
+
+  box-shadow:
+    0 0 40px rgba(0,0,0,.5);
+
+}
+
+
+
+.bean-modal-top{
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 18px;
+
+  margin-bottom: 32px;
+
+}
+
+
+
+.bean-modal-category{
+
+  font-size: 12px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,.55);
+
+  margin-bottom: 12px;
+
+}
+
+
+
+.bean-modal-name{
+
+  font-size: 42px;
+
+  line-height: 1.1;
+
+  color: var(--gold);
+
+  font-family: var(--serif-font);
+
+}
+
+
+
+.bean-modal-origin{
+
+  color: rgba(255,255,255,.85);
+
+  font-size: 15px;
+
+  text-align: right;
+
+}
+
+
+
+.bean-modal-section{
+
+  margin-bottom: 28px;
+
+}
+
+
+
+.bean-modal-label{
+
+  font-size: 11px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,.45);
+
+  margin-bottom: 10px;
+
+}
+
+
+
+.bean-modal-text{
+
+  color: rgba(255,255,255,.82);
+
+  line-height: 1.8;
+
+  font-size: 15px;
+
+}
+
+
+
+.bean-modal-price{
+
+  margin-top: 36px;
+
+  padding-top: 20px;
+
+  border-top:
+    1px solid rgba(212,175,55,.12);
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+}
+
+
+
+.bean-modal-price span{
+
+  font-size: 11px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,.45);
+
+}
+
+
+
+.bean-modal-price strong{
+
+  color: var(--gold);
+
+  font-size: 28px;
+
+}
+
+
+
+.bean-modal-close{
+
+  margin-top: 32px;
+
+  width: 100%;
+
+  border: none;
+
+  border-radius: 16px;
+
+  padding: 16px;
+
+  background: var(--gold);
+
+  color: #000;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: .3s;
+
+}
+
+
+
+.bean-modal-close:hover{
+
+  opacity: .9;
+
+}
