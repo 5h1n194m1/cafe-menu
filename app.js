@@ -66,11 +66,11 @@ async function loadMenu(){
 
         /* F */
         available:
-          row.c[5]?.v || "TRUE",
+          getCellValue(row.c[5]),
 
         /* G */
         temp:
-          row.c[6]?.v || "-"
+          getCellValue(row.c[6])
 
       }))
 
@@ -100,23 +100,33 @@ async function loadMenu(){
     const beansData =
       beansRows.map(row => ({
 
+        /* A */
         id:
           row.c[0]?.v || "",
 
+        /* B */
         category:
           row.c[1]?.v || "",
 
+        /* C */
         name:
           row.c[2]?.v || "",
 
+        /* D */
         process:
-          row.c[3]?.v || "",
+          getCellValue(row.c[3]),
 
+        /* E */
         origin:
-          row.c[4]?.v || "",
+          getCellValue(row.c[4]),
 
+        /* F */
         notes:
-          row.c[5]?.v || ""
+          getCellValue(row.c[5]),
+
+        /* G */
+        brewPrice:
+          getCellValue(row.c[6])
 
       }))
 
@@ -255,9 +265,13 @@ function renderCategory(title,items){
 
 function renderItem(item){
 
-  const isAvailable =
+  const availableValue =
     String(item.available)
-      .toUpperCase() === "TRUE"
+      .trim()
+      .toUpperCase()
+
+  const isAvailable =
+    availableValue === "TRUE"
 
   const available =
     !isAvailable
@@ -358,7 +372,7 @@ function formatSinglePrice(value){
   const clean =
     String(value).trim()
 
-  /* TEXT SUPPORT */
+  /* SUPPORT TEXT */
   if(isNaN(clean)) return clean
 
   const number =
@@ -391,7 +405,7 @@ function renderBeansSection(beans){
         <div class="category-line"></div>
 
         <div class="category-name">
-          Beans Collections
+          Kumbawali Beans Selection
         </div>
 
         <div class="category-line"></div>
@@ -399,7 +413,7 @@ function renderBeansSection(beans){
       </div>
 
       <div class="beans-subtitle">
-        Single Origin • House Blend • Specialty
+        Available for V60 • Japanese • Manual Brew
       </div>
 
       <div class="beans-grid">
@@ -411,12 +425,18 @@ function renderBeansSection(beans){
             <div class="bean-top">
 
               <div class="bean-origin">
-                ${bean.origin}
+                ${bean.origin || bean.category}
               </div>
 
-              <div class="bean-badge">
-                ${bean.process}
-              </div>
+              ${
+                bean.process
+                ? `
+                  <div class="bean-badge">
+                    ${bean.process}
+                  </div>
+                `
+                : ""
+              }
 
             </div>
 
@@ -424,9 +444,31 @@ function renderBeansSection(beans){
               ${bean.name}
             </div>
 
-            <div class="bean-note">
-              ${bean.notes}
-            </div>
+            ${
+              bean.notes
+              ? `
+                <div class="bean-note">
+                  ${bean.notes}
+                </div>
+              `
+              : ""
+            }
+
+            ${
+              bean.brewPrice
+              ? `
+                <div class="bean-price">
+
+                  For V60 / Japanese
+
+                  <span>
+                    ${formatSinglePrice(bean.brewPrice)}
+                  </span>
+
+                </div>
+              `
+              : ""
+            }
 
           </div>
 
