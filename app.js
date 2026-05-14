@@ -54,15 +54,16 @@ async function loadMenu(){
           row.c[2]?.v || "",
 
         price:
-          row.c[3]?.f ||
-          row.c[3]?.v ||
-          "",
+          getCellValue(row.c[3]),
+
+        price2:
+          getCellValue(row.c[4]),
 
         available:
-          row.c[4]?.v || "TRUE",
+          row.c[5]?.v || "TRUE",
 
         temp:
-          row.c[5]?.v || "-"
+          row.c[6]?.v || "-"
 
       }))
 
@@ -137,6 +138,24 @@ async function loadMenu(){
 
 
 /* =========================
+   GET CELL VALUE
+========================= */
+
+function getCellValue(cell){
+
+  if(!cell) return ""
+
+  if(cell.f) return cell.f
+
+  if(cell.v !== undefined) return cell.v
+
+  return ""
+
+}
+
+
+
+/* =========================
    RENDER MENU
 ========================= */
 
@@ -160,6 +179,18 @@ function renderMenu(data, beans){
   container.innerHTML = `
 
     ${renderCategory(
+      "Coffee",
+      grouped["Coffee"] || []
+    )}
+
+    ${renderBeansSection(beans)}
+
+    ${renderCategory(
+      "Drink",
+      grouped["Drink"] || []
+    )}
+
+    ${renderCategory(
       "Food",
       grouped["Food"] || []
     )}
@@ -168,18 +199,6 @@ function renderMenu(data, beans){
       "Snack",
       grouped["Snack"] || []
     )}
-
-    ${renderCategory(
-      "Coffee",
-      grouped["Coffee"] || []
-    )}
-
-    ${renderCategory(
-      "Drink",
-      grouped["Drink"] || []
-    )}
-
-    ${renderBeansSection(beans)}
 
   `
 
@@ -277,7 +296,12 @@ function renderItem(item){
       </div>
 
       <div class="menu-price">
-        ${formatPrice(item.price)}
+
+        ${formatPrice(
+          item.price,
+          item.price2
+        )}
+
       </div>
 
     </div>
@@ -288,31 +312,37 @@ function renderItem(item){
 
 
 
-
-
-function getCellValue(cell){
-
-  if(!cell) return ""
-
-  if(cell.f) return cell.f
-
-  if(cell.v !== undefined) return cell.v
-
-  return ""
-
-}
-
-
 /* =========================
    FORMAT PRICE
 ========================= */
 
-function formatPrice(price){
+function formatPrice(price, price2){
 
-  if(!price) return "-"
+  const p1 =
+    price
+    ? String(price).trim()
+    : ""
 
-  return String(price)
-    .replace(/^'/, "")
+  const p2 =
+    price2
+    ? String(price2).trim()
+    : ""
+
+  if(p1 && p2){
+
+    return `
+      ${p1}
+      <span class="price-separator">/</span>
+      ${p2}
+    `
+
+  }
+
+  if(p1) return p1
+
+  if(p2) return p2
+
+  return "-"
 
 }
 
