@@ -44,24 +44,31 @@ async function loadMenu(){
     const menuData =
       menuRows.map(row => ({
 
+        /* A */
         id:
           row.c[0]?.v || "",
 
+        /* B */
         category:
           row.c[1]?.v || "",
 
+        /* C */
         name:
           row.c[2]?.v || "",
 
+        /* D */
         price:
           getCellValue(row.c[3]),
 
+        /* E */
         price2:
           getCellValue(row.c[4]),
 
+        /* F */
         available:
           row.c[5]?.v || "TRUE",
 
+        /* G */
         temp:
           row.c[6]?.v || "-"
 
@@ -319,21 +326,17 @@ function renderItem(item){
 function formatPrice(price, price2){
 
   const p1 =
-    price
-    ? String(price).trim()
-    : ""
+    formatSinglePrice(price)
 
   const p2 =
-    price2
-    ? String(price2).trim()
-    : ""
+    formatSinglePrice(price2)
 
   if(p1 && p2){
 
     return `
-      ${p1}
+      <span>${p1}</span>
       <span class="price-separator">/</span>
-      ${p2}
+      <span>${p2}</span>
     `
 
   }
@@ -343,6 +346,31 @@ function formatPrice(price, price2){
   if(p2) return p2
 
   return "-"
+
+}
+
+
+
+function formatSinglePrice(value){
+
+  if(!value) return ""
+
+  const clean =
+    String(value).trim()
+
+  /* TEXT SUPPORT */
+  if(isNaN(clean)) return clean
+
+  const number =
+    Number(clean)
+
+  if(number >= 1000){
+
+    return `${Math.round(number / 1000)}K`
+
+  }
+
+  return clean
 
 }
 
