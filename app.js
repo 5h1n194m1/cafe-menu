@@ -200,6 +200,7 @@ function renderMenu(data, beans){
       grouped["Coffee"] || []
     )}
 
+${renderBeansSection(beans)}
 
     ${renderCategory(
       "Non Coffee",
@@ -216,7 +217,7 @@ function renderMenu(data, beans){
       grouped["Snack"] || []
     )}
 
-${renderBeansSection(beans)}
+
     
 
     <footer class="menu-footer">
