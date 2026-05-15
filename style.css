@@ -176,63 +176,7 @@
    MODAL
 ========================= */
 
-.bean-modal{
 
-  position: fixed;
-
-  inset: 0;
-
-  z-index: 9999;
-
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  padding: 24px;
-
-}
-
-
-
-.bean-modal-overlay{
-
-  position: absolute;
-
-  inset: 0;
-
-  background: rgba(0,0,0,.75);
-
-  backdrop-filter: blur(8px);
-
-}
-
-
-
-.bean-modal-content{
-
-  position: relative;
-
-  width: 100%;
-
-  max-width: 560px;
-
-  background: #111;
-
-  border:
-    1px solid rgba(212,175,55,.15);
-
-  border-radius: 28px;
-
-  padding: 36px;
-
-  z-index: 2;
-
-  box-shadow:
-    0 0 40px rgba(0,0,0,.5);
-
-}
 
 
 
@@ -741,5 +685,140 @@
 .bean-modal-close:hover{
 
   opacity: .9;
+
+}
+
+.beans-section{
+
+  margin-bottom: 120px;
+
+}
+
+
+
+.bean-head{
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 24px;
+
+}
+
+
+
+.bean-category{
+
+  font-size: 12px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 2px;
+
+  color: rgba(255,255,255,.7);
+
+}
+
+
+
+.bean-origin{
+
+  font-size: 12px;
+
+  color: rgba(255,255,255,.9);
+
+  text-align: right;
+
+}
+
+
+
+.bean-note{
+
+  margin-top: 18px;
+
+  color: rgba(255,255,255,.72);
+
+  font-size: 14px;
+
+  line-height: 1.8;
+
+}
+
+
+
+.bean-process{
+
+  margin-top: 16px;
+
+  display: inline-flex;
+
+  padding: 8px 14px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(212,175,55,.08);
+
+  border:
+    1px solid rgba(212,175,55,.15);
+
+  color: var(--gold);
+
+  font-size: 10px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+}
+
+
+
+.bean-price{
+
+  margin-top: 26px;
+
+  padding-top: 18px;
+
+  border-top:
+    1px solid rgba(212,175,55,.12);
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 12px;
+
+}
+
+
+
+.bean-price span{
+
+  font-size: 11px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,.5);
+
+}
+
+
+
+.bean-price strong{
+
+  color: var(--gold);
+
+  font-size: 24px;
 
 }
