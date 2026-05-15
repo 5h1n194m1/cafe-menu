@@ -211,7 +211,7 @@ function renderMenu(data, beans){
         </div>
 
         <div class="menu-info-item">
-          +1000 untuk semua minuman jahe
+          +1000 untuk tambahan es semua minuman jahe
         </div>
 
         <div class="menu-info-item">
