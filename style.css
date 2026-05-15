@@ -822,3 +822,111 @@
   font-size: 24px;
 
 }
+
+.menu-info-section{
+
+  margin-bottom: 80px;
+
+}
+
+.menu-info-card{
+
+  border: 1px solid rgba(212,175,55,.12);
+
+  border-radius: 24px;
+
+  padding: 28px;
+
+  background: rgba(255,255,255,.02);
+
+}
+
+.menu-info-title{
+
+  color: var(--gold);
+
+  font-size: 18px;
+
+  margin-bottom: 18px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+}
+
+.menu-info-item{
+
+  color: rgba(255,255,255,.72);
+
+  line-height: 1.8;
+
+  margin-bottom: 10px;
+
+}
+
+.menu-footer{
+
+  margin-top: 120px;
+
+  padding-top: 48px;
+
+  border-top: 1px solid rgba(212,175,55,.12);
+
+  text-align: center;
+
+  padding-bottom: 40px;
+
+}
+
+.footer-brand{
+
+  color: var(--gold);
+
+  font-size: 28px;
+
+  margin-bottom: 14px;
+
+  font-family: var(--serif-font);
+
+}
+
+.footer-contact{
+
+  color: rgba(255,255,255,.55);
+
+  margin-bottom: 8px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  font-size: 11px;
+
+}
+
+.footer-number{
+
+  color: rgba(255,255,255,.85);
+
+  margin-bottom: 28px;
+
+}
+
+.footer-credit{
+
+  color: var(--gold);
+
+  text-decoration: none;
+
+  opacity: .85;
+
+  transition: .3s;
+
+}
+
+.footer-credit:hover{
+
+  opacity: 1;
+
+}

@@ -202,8 +202,28 @@ function renderMenu(data, beans){
 
     ${renderBeansSection(beans)}
 
+    <section class="menu-info-section">
+
+      <div class="menu-info-card">
+
+        <div class="menu-info-title">
+          Additional Information
+        </div>
+
+        <div class="menu-info-item">
+          +1000 additional ice for all ginger-based drinks
+        </div>
+
+        <div class="menu-info-item">
+          +1500 takeaway charge
+        </div>
+
+      </div>
+
+    </section>
+
     ${renderCategory(
-      "Drink",
+      "Non Coffee",
       grouped["Drink"] || []
     )}
 
@@ -216,6 +236,33 @@ function renderMenu(data, beans){
       "Snack",
       grouped["Snack"] || []
     )}
+
+    
+
+    <footer class="menu-footer">
+
+      <div class="footer-brand">
+        Garasi Kumbawali
+      </div>
+
+      <div class="footer-contact">
+        Reservation & Information
+      </div>
+
+      <div class="footer-number">
+        +62 812-2522-2112 (Yudha Harnoko)
+      </div>
+
+      <a
+        href="https://instagram.com/zul.notes"
+        target="_blank"
+        class="footer-credit"
+      >
+        Digital Menu by Zul.notes
+      </a>
+
+    </footer>
+
 
   `
 
