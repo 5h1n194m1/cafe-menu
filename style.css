@@ -954,11 +954,31 @@
 
 
 
-.menu-global-info span{
+.menu-global-info{
 
-  margin: 0 10px;
+  margin-top: 18px;
 
-  opacity: .4;
+  margin-bottom: 48px;
+
+  text-align: center;
+
+  color: rgba(255,255,255,.5);
+
+  font-size: 11px;
+
+  letter-spacing: 1.8px;
+
+  line-height: 1.9;
+
+  text-transform: uppercase;
+
+}
+
+
+
+.menu-global-info div{
+
+  margin-bottom: 6px;
 
 }
 
@@ -983,11 +1003,30 @@
 }
 
 
+.menu-global-info{
 
-.menu-global-info span{
+  margin-top: 18px;
 
-  margin: 0 10px;
+  margin-bottom: 48px;
 
-  opacity: .4;
+  text-align: center;
+
+  color: rgba(255,255,255,.5);
+
+  font-size: 11px;
+
+  letter-spacing: 1.8px;
+
+  line-height: 1.9;
+
+  text-transform: uppercase;
+
+}
+
+
+
+.menu-global-info div{
+
+  margin-bottom: 6px;
 
 }
