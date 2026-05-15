@@ -459,9 +459,19 @@ function renderBeansSection(beans){
 
       </div>
 
-      <div class="beans-subtitle">
-        Coffee • Eatery • Space
-      </div>
+  <div class="beans-subtitle">
+  Coffee • Eatery • Space
+</div>
+
+<div class="menu-global-info">
+
+  +1000 additional ice for all ginger-based drinks
+
+  <span>•</span>
+
+  +1500 takeaway
+
+</div>
 
       <div class="menu-global-info">
         +1000 additional ice for all ginger-based drinks • +1500 takeaway
