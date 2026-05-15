@@ -216,6 +216,7 @@ function renderMenu(data, beans){
       grouped["Snack"] || []
     )}
 
+${renderBeansSection(beans)}
     
 
     <footer class="menu-footer">
