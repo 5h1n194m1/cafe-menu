@@ -1036,3 +1036,37 @@
   font-size: 16px;
 
 }
+
+.footer-divider{
+
+  width: 120px;
+
+  height: 1px;
+
+  margin: 18px auto 22px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(212,175,55,.35),
+      transparent
+    );
+
+}
+
+
+
+.footer-credit-text{
+
+  color: rgba(255,255,255,.45);
+
+  font-size: 11px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  margin-bottom: 14px;
+
+}
