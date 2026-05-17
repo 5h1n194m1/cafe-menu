@@ -231,10 +231,13 @@ ${renderBeansSection(beans)}
       <div class="footer-contact">
         Reservation & Information
       </div>
-
-      <div class="footer-number">
-        +62 812-2522-2112 (Yudha Harnoko)
-      </div>
+<a
+  class="footer-number"
+  href="https://wa.me/6281225222112"
+  target="_blank"
+>
+  WhatsApp Reservation
+</a>
 
       <a
         href="https://instagram.com/zul.notes"
